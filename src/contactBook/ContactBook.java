@@ -1,7 +1,5 @@
 package contactBook;
 
-import contactBook.Contact;
-
 public class ContactBook {
     static final int DEFAULT_SIZE = 100;
 
@@ -20,6 +18,10 @@ public class ContactBook {
         return searchIndex(name) >= 0;
     }
 
+    public boolean hasNumber(int num) {
+        return searchIndex(num) >= 0;
+    }
+
     public int getNumberOfContacts() {
         return counter;
     }
@@ -35,14 +37,18 @@ public class ContactBook {
     //Pre: name != null && hasContact(name)
     public void deleteContact(String name) {
         int index = searchIndex(name);
-        for(int i=index; i<counter; i++)
-            contacts[i] = contacts[i+1];
+        for (int i = index; i < counter; i++)
+            contacts[i] = contacts[i + 1];
         counter--;
     }
 
     //Pre: name != null && hasContact(name)
     public int getPhone(String name) {
         return contacts[searchIndex(name)].getPhone();
+    }
+
+    public String getName(int num) {
+        return contacts[searchIndex(num)].getName();
     }
 
     //Pre: name != null && hasContact(name)
@@ -64,7 +70,7 @@ public class ContactBook {
         int i = 0;
         int result = -1;
         boolean found = false;
-        while (i<counter && !found)
+        while (i < counter && !found)
             if (contacts[i].getName().equals(name))
                 found = true;
             else
@@ -73,24 +79,38 @@ public class ContactBook {
         return result;
     }
 
-    private void resize() {
-        Contact tmp[] = new Contact[2*contacts.length];
-        for (int i=0;i<counter; i++)
-            tmp[i] = contacts[i];
-        contacts = tmp;
-    }
+    private int searchIndex(int num) {
+        int i = 0;
+        int result = -1;
+        boolean found = false;
+        while (i < counter && !found)
+            if (contacts[i].getPhone() == num)
+                found = true;
+            else
+                i++;
+        if (found) result = i;
+        return result;
+}
 
-    public void initializeIterator() {
-        currentContact = 0;
-    }
+private void resize() {
+    Contact tmp[] = new Contact[2 * contacts.length];
+    for (int i = 0; i < counter; i++)
+        tmp[i] = contacts[i];
+    contacts = tmp;
+}
 
-    public boolean hasNext() {
-        return (currentContact >= 0 ) && (currentContact < counter);
-    }
+public void initializeIterator() {
+    currentContact = 0;
+}
 
-    //Pre: hasNext()
-    public Contact next() {
-        return contacts[currentContact++];
-    }
+public boolean hasNext() {
+    return (currentContact >= 0) && (currentContact < counter);
+}
+
+//Pre: hasNext()
+public Contact next() {
+    return contacts[currentContact++];
+}
+
 
 }
